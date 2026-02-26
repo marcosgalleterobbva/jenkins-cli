@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  shell-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate shell syntax
+        run: |
+          sh -n install.sh
+          bash -O extglob -n jenkins-cli
+
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Run shellcheck
+        run: shellcheck -x install.sh jenkins-cli
+
+      - name: Installer smoke test (local source)
+        run: |
+          BIN_DIR="$(mktemp -d)"
+          sh ./install.sh --source-url "file://$PWD/jenkins-cli" --bin-dir "$BIN_DIR"
+          test -x "$BIN_DIR/jenkins-cli"

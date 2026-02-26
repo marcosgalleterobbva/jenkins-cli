@@ -30,6 +30,25 @@ curl -fsSL https://raw.githubusercontent.com/<org>/<repo>/main/install.sh \
   | sh -s -- --repo <org>/<repo> --bin-dir "$HOME/bin"
 ```
 
+## Verify checksums
+
+After downloading release assets, verify integrity with `SHA256SUMS`:
+
+```bash
+sha256sum -c SHA256SUMS
+```
+
+## Release automation
+
+- CI workflow: `.github/workflows/ci.yml`
+- Release workflow: `.github/workflows/release.yml`
+- Any pushed tag matching `v*` publishes a GitHub Release with:
+  - `jenkins-cli`
+  - `install.sh`
+  - `jenkins-cli-<tag>.tar.gz`
+  - `jenkins-cli-<tag>.zip`
+  - `SHA256SUMS`
+
 ## Command usage example
 
 ```bash
